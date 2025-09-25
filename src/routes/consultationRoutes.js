@@ -1,14 +1,12 @@
-
 import express from 'express';
-import { getMedicationRecommendation, getSymptoms } from '../controllers/consultationController.js';
-import { saveConsultation, getSharedConsultation } from '../controllers/shareController.js';
+import { getConsultationResponse } from '../controllers/consultationController.js';
+import { getSymptoms } from '../controllers/consultationController.js';
+import { saveConsultation } from '../controllers/shareController.js';
 
 const router = express.Router();
 
-router.post('/consultation', getMedicationRecommendation);
-
+router.post('/consultation', getConsultationResponse); 
+router.get('/symptoms', getSymptoms); 
 router.post('/share', saveConsultation);
-router.get('/share/:id', getSharedConsultation);
-router.get('/symptoms', getSymptoms);
 
 export default router;

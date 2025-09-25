@@ -4,10 +4,10 @@ import ShareableConsultation from '../models/ShareableConsultation.js';
 
 export const saveConsultation = async (req, res) => {
     try {
-        const { symptom, age, weight, temperature, recommendations } = req.body;
+        const { symptom, age, weight, temperature, aiResponse } = req.body;
         
        
-        if (!symptom || !weight || age === undefined || !recommendations) {
+        if (!symptom || !weight || age === undefined || !aiResponse) {
             return res.status(400).json({ error: 'Missing required data.' });
         }
 
@@ -16,7 +16,7 @@ export const saveConsultation = async (req, res) => {
             age,
             weight,
             temperature,
-            recommendations
+            aiResponse,
         });
 
         const savedConsultation = await newConsultation.save();

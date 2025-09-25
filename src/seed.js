@@ -1,7 +1,9 @@
 // src/seed.js
 import connectDB from '../config/db.js';
 import Symtom from './models/Symtom.js';
-import pediatricMedicines from './data/pediatricMedicines.js'; // Asumiendo que pega el JSON en un archivo
+import pediatricMedicines from './data/pediatricMedicines.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const seedDB = async () => {
   try {
