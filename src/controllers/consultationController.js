@@ -2,12 +2,15 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
 import Symptom from "../models/Symtom.js"; 
+// 🛑 IMPORTAR EL SERVICIO DE EMAIL AQUÍ
+import { sendRecommendationEmail } from '../services/emailService.js'; 
 
-export const getSymptoms = async (req, res) => { // <-- Se hizo asíncrona
+// Inicialización de la IA
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+export const getSymptoms = async (req, res) => { 
   try {
-   
     const symptoms = await Symptom.find({});
-    // Mapear los resultados para obtener solo el nombre del síntoma
     const symptomsList = symptoms.map(item => item.symptom);
     res.json(symptomsList);
   } catch (error) {
@@ -16,22 +19,33 @@ export const getSymptoms = async (req, res) => { // <-- Se hizo asíncrona
   }
 };
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Nueva función para listar modelos disponibles (se mantiene)
+export const listAvailableModels = async (req, res) => {
+  try {
+    const models = await genAI.listModels();
+    res.status(200).json(models);
+  } catch (error) {
+    console.error("Error al listar modelos disponibles:", error);
+    res.status(500).json({ error: "No se pudieron obtener los modelos disponibles." });
+  }
+};
 
-// @desc    Get AI-generated consultation response
-// @route   POST /api/consultation
+// @desc    Get AI-generated consultation response and optionally send email
+// @route   POST /api/consultation (o /api/process-consultation)
 export const getConsultationResponse = async (req, res) => {
-  const { symptom, age, weight, temperature } = req.body;
+  // 🛑 DESESTRUCTURAR email y sendEmail
+  const { symptom, age, weight, temperature, email, sendEmail } = req.body;
+  let aiResponseText = '';
+  let emailSent = false; 
 
   try {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }); 
+    // 1. GENERACIÓN DE RESPUESTA DE LA IA
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); 
 
-    // Prompt del sistema
-   const systemPrompt = `
+    const systemPrompt = `
     Eres un asistente de salud pediátrico virtual. Tu único trabajo es proporcionar una respuesta en un formato conversacional. No des nombres de medicamentos, dosis o un plan de tratamiento específico. Siempre debes incluir una advertencia clara al final de tu respuesta que diga: "Esto es solo una guía general. Consulta siempre a un médico para un diagnóstico y tratamiento precisos." Tu respuesta debe ser empática, concisa y útil, en español.
-  `;
+    `;
 
-    // Prompt del usuario basado en los datos de la consulta
     const userPrompt = `
       Basado en la siguiente información, por favor, dame una respuesta clara y concisa.
       Síntoma: ${symptom}
@@ -43,12 +57,37 @@ export const getConsultationResponse = async (req, res) => {
     const fullPrompt = `${systemPrompt}\n\n${userPrompt}`;
 
     const result = await model.generateContent(fullPrompt);
-    const response = result.response;
-    const text = response.text();
+    aiResponseText = result.response.text();
 
-    res.status(200).json({ aiResponse: text });
   } catch (error) {
-    console.error('Error al obtener la respuesta de la IA:', error);
-    res.status(500).json({ error: 'Fallo al obtener la respuesta de la IA.' });
+    // Si falla la IA, respondemos con el error y terminamos la ejecución
+    if (error.status === 404) {
+      console.error("Modelo no encontrado. Verifica el nombre del modelo.");
+    } else {
+      console.error('Error al obtener la respuesta de la IA:', error);
+    }
+    return res.status(500).json({ error: 'Fallo al obtener la respuesta de la IA.' });
   }
+
+  // 2. LÓGICA DE ENVÍO DE EMAIL (solo si el frontend lo solicita)
+  if (sendEmail && email) {
+    try {
+      // 🛑 LLAMAR AL SERVICIO DE EMAIL
+      const result = await sendRecommendationEmail(email, aiResponseText);
+      emailSent = result; // Debería ser true si se envió
+      console.log(`Email intentado para ${email}. Éxito: ${emailSent}`);
+      
+    } catch (emailError) {
+      // 🛑 ESTO CAPTURA EL ERROR DE AUTHENTICATION DE NODEMAILER Y LO IMPRIME
+      console.error('🛑 ERROR DE NODEMAILER/AUTENTICACIÓN:', emailError);
+      emailSent = false;
+    }
+  }
+
+  // 3. RESPUESTA FINAL AL FRONTEND
+  // Incluimos la respuesta de la IA y el estado del email
+  res.status(200).json({ 
+    aiResponse: aiResponseText,
+    emailSent: emailSent // Le dice al frontend si el envío fue exitoso o falló
+  });
 };

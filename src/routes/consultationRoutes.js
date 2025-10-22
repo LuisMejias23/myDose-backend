@@ -10,3 +10,4 @@ router.get('/symptoms', getSymptoms);
 router.post('/share', saveConsultation);
 
 export default router;
+
