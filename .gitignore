@@ -10,3 +10,10 @@ yarn-debug.log*
 
 # Archivos de credenciales sensibles
 /config/
+
+# Firebase credentials
+"https://mydose-app.vercel.app",
+
+# System files
+.DS_Store
+Thumbs.db
