@@ -49,7 +49,7 @@ app.use(cors({
 
 app.use(express.json());
 
-const serviceAccount = require("../config/mydose-credentials.json");
+const serviceAccount = require("../mydose-credentials.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

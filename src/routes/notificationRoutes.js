@@ -4,13 +4,14 @@ import Subscription from "../models/Subscription.js";
 import webpush from 'web-push';
 
 const router = Router();
-const VAPID_PUBLIC_KEY = 'BKdYML7XIbaVNKRK-WjSnH_gJcL0oKCRhcP6q74OmQnqGsaFLwkBd4aY2yHKIP1zYXsQVM6GcOTaVb_XCpXbtDY'; 
-const VAPID_PRIVATE_KEY = 'OSnXi2r0EjJsjyQYAcyDng3OUqXDnShiIx4VsKDGrOk'
+const publiKey = process.env.VAPID_PUBLIC_KEY 
+const privaKey = process.env.VAPID_PRIVATE_KEY 
+
 
 webpush.setVapidDetails(
     'mailto:loiscool1234@gmail.com', // Un email de contacto (puede ser ficticio)
-    VAPID_PUBLIC_KEY,
-    VAPID_PRIVATE_KEY
+    publiKey,
+    privaKey
 );
 
 router.post("/save-subscription", async (req, res) => {
