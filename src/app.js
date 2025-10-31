@@ -20,7 +20,7 @@ const port = process.env.PORT || 3000;
 // -------------------------------------------------------------
 
 const allowedOrigins = [
-  "https://mi-app-mydose-temporal.vercel.app",
+  "https://my-dose-frontend.vercel.app",
   "https://bandboxical-berneice-nonincarnated.ngrok-free.dev", 
 ];
 
