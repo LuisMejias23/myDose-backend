@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 
 const allowedOrigins = [
   "https://my-dose-frontend.vercel.app",
-  "https://bandboxical-berneice-nonincarnated.ngrok-free.dev", 
+  "https://mydose-api.onrender.com", 
 ];
 
 app.use(cors({
