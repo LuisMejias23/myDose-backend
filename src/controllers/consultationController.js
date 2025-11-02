@@ -70,7 +70,7 @@ export const getConsultationResponse = async (req, res) => {
   }
 
   // 2. LÓGICA DE ENVÍO DE EMAIL (solo si el frontend lo solicita)
-  if (sendEmail && email) {
+  if (sendEmail === true) {
     try {
       // 🛑 LLAMAR AL SERVICIO DE EMAIL
       const result = await sendRecommendationEmail(email, aiResponseText);
