@@ -1,13 +1,15 @@
 import nodemailer from 'nodemailer';
 
-// 1. Crea el transporter (configuración de envío)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true para 465, false para otros puertos (como 587)
     auth: {
-        user: process.env.EMAIL_USER,    // Tu correo de Gmail
-        pass: process.env.EMAIL_PASSWORD  // Tu Contraseña de Aplicación (16 caracteres)
+        user: process.env.EMAIL_USER,    
+        pass: process.env.EMAIL_PASSWORD 
     }
 });
+
 
 export const sendRecommendationEmail = async (recipientEmail, aiResponse) => {
     // 2. Define el contenido del correo

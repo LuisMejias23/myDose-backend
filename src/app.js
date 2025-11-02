@@ -96,8 +96,6 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Ruta no encontrada" });
 });
 
-// B) Middleware Global de Manejo de Errores (500)
-// Esto garantiza que cualquier error de servidor NO devuelva HTML
 app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
