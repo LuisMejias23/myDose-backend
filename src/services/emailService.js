@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
+
+export const sendRecommendationEmail = async (recipientEmail, aiResponse) => {
+
+    const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false, // ⬅️ Correcto para el puerto 587
@@ -10,9 +13,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASSWORD 
     }
 });
-
-
-export const sendRecommendationEmail = async (recipientEmail, aiResponse) => {
     // 2. Define el contenido del correo
     const mailOptions = {
         from: process.env.EMAIL_SENDER,

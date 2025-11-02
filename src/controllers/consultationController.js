@@ -2,7 +2,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
 import Symptom from "../models/Symtom.js"; 
-// 🛑 IMPORTAR EL SERVICIO DE EMAIL AQUÍ
 import { sendRecommendationEmail } from '../services/emailService.js'; 
 
 // Inicialización de la IA
@@ -30,10 +29,8 @@ export const listAvailableModels = async (req, res) => {
   }
 };
 
-// @desc    Get AI-generated consultation response and optionally send email
-// @route   POST /api/consultation (o /api/process-consultation)
+
 export const getConsultationResponse = async (req, res) => {
-  // 🛑 DESESTRUCTURAR email y sendEmail
   const { symptom, age, weight, temperature, email, sendEmail } = req.body;
   let aiResponseText = '';
   let emailSent = false; 
@@ -70,7 +67,7 @@ export const getConsultationResponse = async (req, res) => {
   }
 
   // 2. LÓGICA DE ENVÍO DE EMAIL (solo si el frontend lo solicita)
-  if (sendEmail === true) {
+  if (sendEmail) {
     try {
       // 🛑 LLAMAR AL SERVICIO DE EMAIL
       const result = await sendRecommendationEmail(email, aiResponseText);
