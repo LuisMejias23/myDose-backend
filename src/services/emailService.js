@@ -1,18 +1,14 @@
 //import nodemailer from 'nodemailer';
-import { Resend } from "resend";
+import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendRecommendationEmail = async (
-  recipientEmail,
-  aiResponseText
-) => {
-    const emailBox = aiResponseText
-  try {
-    const { emailBox, error } = await resend.emails.send({
-      from: "MyDose <onboarding@resend.dev>",
+export const sendRecommendationEmail = async (recipientEmail, aiResponseText) => {
+ try {
+    const { data, error } = await resend.emails.send({
+      from: 'MyDose <onboarding@resend.dev>',
       to: recipientEmail,
-      subject: "Recomendación de tu consulta médica virtual",
+      subject: 'Recomendación de tu consulta médica virtual',
       html: `
          <h1>Análisis de Síntomas Pediátricos (Uso Didáctico)</h1>
             <p>Estimado usuario,</p>
@@ -26,14 +22,17 @@ export const sendRecommendationEmail = async (
     });
 
     if (error) {
-      console.error("❌ Error al enviar el correo con Resend:", error);
+      console.error('❌ Error al enviar el correo con Resend:', error);
       return false;
     }
 
-    console.log("✅ Correo enviado correctamente:", emailBox);
+    console.log('✅ Correo enviado correctamente:', data);
     return true;
   } catch (err) {
-    console.error("❌ Error general al usar Resend:", err);
+    console.error('❌ Error general al usar Resend:', err);
     return false;
   }
+   
 };
+
+
