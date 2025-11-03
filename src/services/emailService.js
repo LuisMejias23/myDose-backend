@@ -3,11 +3,11 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const sendRecommendationEmail = async (to, aiResponseText) => {
+export const sendRecommendationEmail = async (recipientEmail, aiResponseText) => {
  try {
     const { data, error } = await resend.emails.send({
       from: 'MyDose <onboarding@resend.dev>',
-      to,
+      to: recipientEmail,
       subject: 'Recomendación de tu consulta médica virtual',
       html: `
          <h1>Análisis de Síntomas Pediátricos (Uso Didáctico)</h1>
