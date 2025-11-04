@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors"; // ⬅️ Nuevo import
 import connectDB from "../config/db.js";
 import consultationRoutes from "./routes/consultationRoutes.js";
+import emailRoutes from "./routes/emailRoutes.js";
 import admin from "firebase-admin";
 import { createRequire } from "node:module";
 import notificationRoutes from "./routes/notificationRoutes.js";
@@ -81,17 +82,9 @@ if (serviceAccountPath) {
 app.use("/api/notifications", notificationRoutes);
 app.use("/api", consultationRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api", emailRoutes);
 
-// La ruta raíz fue comentada o eliminada para el pooling:
-/* app.get("/", (req, res) => {
-  res.send("Welcome to the MyDose API!");
-}); */
 
-// -------------------------------------------------------------
-// 4. MIDDLEWARE DE MANEJO DE ERRORES (Al final de todas las rutas)
-// -------------------------------------------------------------
-
-// A) Manejo de Rutas No Encontradas (404)
 app.use((req, res, next) => {
   res.status(404).json({ message: "Ruta no encontrada" });
 });
