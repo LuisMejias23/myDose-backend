@@ -1,9 +1,8 @@
-import express from 'express';
-import { sendEmail } from '../controllers/emailController.js';
+import { Router } from 'express';
+import { sendRecommendationContent } from '../controllers/emailController.js';
 
-const router = express.Router();
+const router = Router();
 
-// Ruta para enviar correos electrónicos
-router.post('/send-email', sendEmail);
+router.post('/send-recommendation-content', sendRecommendationContent);
 
 export default router;
