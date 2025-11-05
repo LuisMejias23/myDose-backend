@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { sendRecommendationContent } from '../controllers/emailController.js';
+import { sendRecommendationContentController } from '../controllers/emailController.js';
 
 const router = Router();
 
-router.post('/send-recommendation-content', sendRecommendationContent);
+router.post('/send-recommendation-content', sendRecommendationContentController);
 
 export default router;

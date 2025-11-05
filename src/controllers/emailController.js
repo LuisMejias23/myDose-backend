@@ -1,14 +1,14 @@
-import { sendRecommendationContent } from '../services/emailService.js';
+import { sendRecommendationEmail } from '../services/emailService.js';
 
-export const getEmailResponse = async (req, res) => {
+export const sendRecommendationContentController = async (req, res) => {
   const { recommendationText, to } = req.body;
 
-   if (!subject || !body || !to) {
-        return res.status(400).json({ success: false, message: 'Faltan campos obligatorios (subject, body, to).' });
+   if (!recommendationText || !to) {
+        return res.status(400).json({ success: false, message: 'Faltan campos obligatorios (recommendationText, to).' });
     }
   
     try {
-        const success = await sendRecommendationContent(to, recommendationText);
+        const success = await sendRecommendationEmail(to, recommendationText);
 
         if (success) {
             return res.status(200).json({ success: true, message: 'Correo enviado correctamente.' });
@@ -16,7 +16,7 @@ export const getEmailResponse = async (req, res) => {
             return res.status(500).json({ success: false, message: 'Error interno al enviar el correo.' });
         }
     } catch (error) {
-        console.error('Error en sendRecommendationContent:', error);
+        console.error('Error en sendRecommendationContentController:', error);
         return res.status(500).json({ success: false, message: 'Error del servidor al procesar la solicitud.' });
     }
 };
