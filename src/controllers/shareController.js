@@ -30,6 +30,8 @@ export const saveConsultation = async (req, res) => {
 export const getSharedConsultation = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("🔍 Buscando consulta con ID:", id);
+    
     const consultation = await ShareableConsultation.findById(id);
 
     if (!consultation) {
