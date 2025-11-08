@@ -13,10 +13,11 @@ export const saveConsultation = async (req, res) => {
       age,
       weight,
       temperature,
-      aiResponse,
+      recommendations: Array.isArray(aiResponse) ? aiResponse : [aiResponse],
     });
 
     const savedConsultation = await newConsultation.save();
+    console.log("✅ Consulta guardada con ID:", savedConsultation._id);
 
     res.status(201).json({ shareId: savedConsultation._id });
   } catch (error) {
@@ -25,7 +26,7 @@ export const saveConsultation = async (req, res) => {
   }
 };
 
-// Controlador para obtener una consulta por su ID
+
 export const getSharedConsultation = async (req, res) => {
   try {
     const { id } = req.params;

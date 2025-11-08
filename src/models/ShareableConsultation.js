@@ -23,7 +23,7 @@ const ShareableConsultationSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: '7d', // Eliminará los documentos automáticamente después de 7 días
+        expires: '7d', 
     },
 });
 
